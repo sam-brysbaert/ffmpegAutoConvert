@@ -3,19 +3,13 @@
 inputDir="$1"
 outputDir="$2"
 
-# locations of executables on system, change this to match the locations on your personal system
-mediainfo="/run/current-system/sw/bin/mediainfo"
-ffmpeg="/run/current-system/sw/bin/ffmpeg"
-mkdir="/run/current-system/sw/bin/mkdir"
-cp="/run/current-system/sw/bin/cp"
-
 # if this isn't set, then globs are evaluated literally if no matching files are found, this can cause errors later on in the program, e.g. with ffmpeg
 shopt -s nullglob
 # this makes it possible to glob into directories
 shopt -s globstar
 
 for file in $inputDir/**/*.{mkv,mp4,avi,m4a,flv,mov,wmv,m4v}; do
-	formatVid="$($mediainfo --Inform="Video;%Format%" "$file")"
+	formatVid="$(mediainfo --Inform="Video;%Format%" "$file")"
 	if [ "$formatVid" = "AVC" ]; then
 		videoSettings="-c:v copy"
 	else
@@ -31,15 +25,15 @@ for file in $inputDir/**/*.{mkv,mp4,avi,m4a,flv,mov,wmv,m4v}; do
 	outputFile=""$outputDir"/"${relativeFileName%.*}".mp4"
 	dirToCreate="$(dirname "$outputFile")"
 	
-	$mkdir -p "$dirToCreate" 
-	$cp $(dirname "$file")/*.srt $dirToCreate
+	mkdir -p "$dirToCreate" 
+	cp $(dirname "$file")/*.srt $dirToCreate
 	
-	formatSub="$($mediainfo --Inform="Text;%Format%" "$file")"
+	formatSub="$(mediainfo --Inform="Text;%Format%" "$file")"
 	if [[ $formatSub = *"PGS"* || $formatSub = *"VobSub"* ]]; then
-		$ffmpeg -n -i "$file" -movflags faststart $videoSettings $audioSettings -map $vidMapSettings -map "$audioMapSettings" "$outputFile"
+		ffmpeg -n -i "$file" -movflags faststart $videoSettings $audioSettings -map $vidMapSettings -map "$audioMapSettings" "$outputFile"
 	else
 		subtitleSettings="-c:s mov_text"
 		subMapSettings="0:s?"
-		$ffmpeg -n -i "$file" -movflags faststart $videoSettings $audioSettings $subtitleSettings -map $vidMapSettings -map "$audioMapSettings" -map "$subMapSettings" "$outputFile"
+		ffmpeg -n -i "$file" -movflags faststart $videoSettings $audioSettings $subtitleSettings -map $vidMapSettings -map "$audioMapSettings" -map "$subMapSettings" "$outputFile"
 	fi
 done
