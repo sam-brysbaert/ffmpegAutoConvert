@@ -4,7 +4,7 @@ inputDir="$1"
 destinationDir="$2"
 
 # if this isn't set, then globs are evaluated literally if no matching files
-# are found, which we don't want.
+# are found, which we don't want for the main for-loop.
 shopt -s nullglob
 # this makes it possible to glob into directories
 shopt -s globstar
@@ -19,12 +19,12 @@ for inputFile in $inputDir/**/*.{mkv,mp4,avi,m4a,flv,mov,wmv,m4v}; do
 	outputDir="$(dirname "$outputFile")"
 	mkdir -p "$outputDir"
 
-	# copy potential srt files
-	cp $(dirname "$inputFile")/*.srt $outputDir
+	# copy any existing srt files
+	for subFile in "$(dirname "$inputFile")"/*.srt; do
+		cp "$subFile" "$outputDir"
+	done
 
-	# stops wildcard chars from being interpreted as globs.
-	shopt -u nullglob
-
+	# this string is where all the options for ffmpeg will be collected
 	options=""
 
 	# for quicker start of video when streaming
@@ -51,6 +51,7 @@ for inputFile in $inputDir/**/*.{mkv,mp4,avi,m4a,flv,mov,wmv,m4v}; do
 	fi
 	
 	# execute ffmpeg
+	set -o noglob # disable globbing because of potential wildcards in $options
 	ffmpeg -n -i "$inputFile" $options "$outputFile"
-
+	set +o noglob # re-enable globbing
 done
