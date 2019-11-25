@@ -15,6 +15,11 @@ for inputFile in $inputDir/**/*.{mkv,mp4,avi,m4a,flv,mov,wmv,m4v}; do
 	relativeFilename="${inputFile#"$inputDir"/}"
 	outputFile=""$destinationDir"/"${relativeFilename%.*}".mp4"
 
+	# if the output file already exists, skip to next file
+	if [ -f "$outputFile" ]; then
+		continue
+	fi
+
 	# create directory for output file
 	outputDir="$(dirname "$outputFile")"
 	mkdir -p "$outputDir"
