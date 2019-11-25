@@ -40,6 +40,7 @@ for inputFile in $inputDir/**/*.{mkv,mp4,avi,m4a,flv,mov,wmv,m4v}; do
 
 	# if the output file already exists, skip to next file
 	if [ -f "$outputFile" ]; then
+		echo "$outputFile already exists; skipping."
 		continue
 	fi
 
@@ -83,3 +84,5 @@ for inputFile in $inputDir/**/*.{mkv,mp4,avi,m4a,flv,mov,wmv,m4v}; do
 	ffmpeg -n -i "$inputFile" $options "$outputFile"
 	set +o noglob # re-enable globbing
 done
+
+echo "Script complete."
