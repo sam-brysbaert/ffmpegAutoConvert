@@ -3,10 +3,16 @@
 inputDir="$1"
 destinationDir="$2"
 
+# function to show errors and exit
 showError() {
 	echo "$1" 1>&2
 	exit 1
 }
+
+# check if script is already running, and exit if it is
+if ps ax | grep $0 | grep -v $$ | grep bash | grep -v -q grep; then
+	showError "ffmpegAutoConvert already running; exiting."
+fi
 
 # check if the correct number of arguments have been given
 
