@@ -14,8 +14,7 @@ if ps ax | grep $0 | grep -v $$ | grep bash | grep -v -q grep; then
 	showError "ffmpegAutoConvert already running; exiting."
 fi
 
-# check if the correct number of arguments have been given
-
+# check if number of arguments is correct
 if [ "$#" -ne 2 ]; then
 	showError "ERROR: Please provide exactly two directories as arguments. The first being the input directory (where the files you want to convert are located), the second being the output directory (where the converted files will be placed).
 Like so: ffmpegAutoConvert /path/to/input/dir /path/to/output/dir"
@@ -64,6 +63,9 @@ for inputFile in $inputDir/**/*.{mkv,mp4,avi,m4a,flv,mov,wmv,m4v}; do
 
 	# for quicker start of video when streaming
 	options+="-movflags faststart "
+
+	# strip title metadata
+	options+="-metadata Title= "
 
 	# determine video settings
 	formatVid="$(mediainfo --Inform="Video;%Format%" "$inputFile")"
