@@ -53,8 +53,8 @@ for inputFile in $inputDir/**/*.{mkv,mp4,avi,m4a,flv,mov,wmv,m4v}; do
 	outputDir="$(dirname "$outputFile")"
 	mkdir -p "$outputDir"
 
-	# copy any existing srt files
-	for subFile in "$(dirname "$inputFile")"/*.srt; do
+	# copy any existing external subtitle files
+	for subFile in "$(dirname "$inputFile")"/*.{srt,ssa,ass}; do
 		cp "$subFile" "$outputDir"
 	done
 
