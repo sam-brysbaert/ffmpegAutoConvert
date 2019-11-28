@@ -37,7 +37,7 @@ shopt -s nullglob
 # this makes it possible to glob into directories
 shopt -s globstar
 
-for inputFile in $inputDir/**/*.{mkv,mp4,avi,m4a,flv,mov,wmv,m4v}; do
+for inputFile in "$inputDir"/**/*.{mkv,mp4,avi,m4a,flv,mov,wmv,m4v}; do
 
 	# calculate path for output file
 	relativeFilename="${inputFile#"$inputDir"/}"
