@@ -69,7 +69,8 @@ for inputFile in "$inputDir"/**/*.{mkv,mp4,avi,m4a,flv,mov,wmv,m4v}; do
 
 	# determine video settings
 	formatVid="$(mediainfo --Inform="Video;%Format%" "$inputFile")"
-	if [ "$formatVid" = "AVC" ]; then
+	heightVid="$(mediainfo --Inform="Video;%Height%" "$inputFile")"
+	if [ "$formatVid" = "AVC" ] || [ "$heightVid" = "2160" ]; then
 		options+="-c:v copy "
 	else
 		options+="-c:v libx264 -preset ultrafast -crf 22 "
