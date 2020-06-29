@@ -61,9 +61,6 @@ for inputFile in "$inputDir"/**/*.{mkv,mp4,avi,m4a,flv,mov,wmv,m4v}; do
 	# this string is where all the options for ffmpeg will be collected
 	options=""
 
-	# for quicker start of video when streaming
-	options+="-movflags faststart "
-
 	# strip title metadata
 	options+="-metadata Title= "
 
